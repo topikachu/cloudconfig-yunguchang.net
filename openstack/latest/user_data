@@ -47,7 +47,7 @@ coreos:
           -listen-peer-urls http://$COREOS_PRIVATE_IPV4:2380 \
           -initial-advertise-peer-urls http://$COREOS_PRIVATE_IPV4:2380 \
           -initial-cluster iZ94s94kyafZ=http://10.170.2.114:2380,iZ94pc0ydobZ=http://10.173.194.107:2380,iZ94rlgda0fZ=http://10.44.86.68:2380\
-          -initial-cluster-state yunguchang"
+          -initial-cluster-state new
         Restart=always
         RestartSec=10s
         LimitNOFILE=40000

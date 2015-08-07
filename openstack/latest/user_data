@@ -4,21 +4,30 @@ write_files:
     permissions: 0644
     owner: root
     content: |
-      PRIVATE_IPV4="10.170.2.114"
-      PUBLIC_IPV4="120.24.249.111"
+      COREOS_PRIVATE_IPV4="10.170.2.114"
+      COREOS_PUBLIC_IPV4="120.24.249.111"
     
 
   - path: /etc/machine.iZ94pc0ydobZ.env
     permissions: 0644
     owner: root
-    content: |
-      PRIVATE_IPV4="10.173.194.107"
-      PUBLIC_IPV4="112.74.209.8"
+    content: |      
+      COREOS_PRIVATE_IPV4="10.173.194.107"
+      COREOS_PUBLIC_IPV4="112.74.209.8"
+
+  - path: /etc/machine.iZ94rlgda0fZ.env
+    permissions: 0644
+    owner: root
+    content: |      
+      COREOS_PRIVATE_IPV4="10.44.86.68"
+      COREOS_PUBLIC_IPV4="112.74.29.86"
+
 
 
 
 
 coreos:
+
   units:
     - name: etcd2.service
       command: start
@@ -26,11 +35,16 @@ coreos:
         - name: 10-config.conf
           content: |
             [Service]
-            EnvironmentFile=/etc/machine.%H.env
-            Environment=ETCD_NAME=%H
-            Environment=ETCD_ADVERTISE_CLIENT_URLS=http://$PRIVATE_IPV4:2379
-            Environment=ETCD_INITIAL_ADVERTISE_PEER_URLS=http://$PRIVATE_IPV4:2380
-            Environment=ETCD_LISTEN_CLIENT_URLS=http://$PRIVATE_IPV4:2379,http://127.0.0.1:2379
-            Environment=ETCD_LISTEN_PEER_URLS=http://$PRIVATE_IPV4:2380
+            ExecStart=/usr/bin/etcd2            
+            -name %H \
+            -listen-client-urls http://$COREOS_PRIVATE_IPV4:2379 \
+            -advertise-client-urls http://$COREOS_PRIVATE_IPV4:2379 \
+            -listen-peer-urls http://$COREOS_PRIVATE_IPV4:2380 \
+            -initial-advertise-peer-urls http://$COREOS_PRIVATE_IPV4:2380 \
+            -initial-cluster iZ94s94kyafZ=http://10.170.2.114:2380,iZ94pc0ydobZ=http://10.173.194.107:2380,iZ94rlgda0fZ=http://10.44.86.68:2380\
+            -initial-cluster-state yunguchang"
 
+
+
+              
 

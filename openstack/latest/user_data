@@ -1,0 +1,36 @@
+#cloud-config
+write_files:
+  - path: /etc/machine.iZ94s94kyafZ.env
+    permissions: 0644
+    owner: root
+    content: |
+      PRIVATE_IPV4="10.170.2.114"
+      PUBLIC_IPV4="120.24.249.111"
+    
+
+  - path: /etc/machine.iZ94pc0ydobZ.env
+    permissions: 0644
+    owner: root
+    content: |
+      PRIVATE_IPV4="10.173.194.107"
+      PUBLIC_IPV4="112.74.209.8"
+
+
+
+
+coreos:
+  units:
+    - name: etcd2.service
+      command: start
+      drop-ins:
+        - name: 10-config.conf
+          content: |
+            [Service]
+            EnvironmentFile=/etc/machine.%H.env
+            Environment=ETCD_NAME=%H
+            Environment=ETCD_ADVERTISE_CLIENT_URLS=http://$PRIVATE_IPV4:2379
+            Environment=ETCD_INITIAL_ADVERTISE_PEER_URLS=http://$PRIVATE_IPV4:2380
+            Environment=ETCD_LISTEN_CLIENT_URLS=http://$PRIVATE_IPV4:2379,http://127.0.0.1:2379
+            Environment=ETCD_LISTEN_PEER_URLS=http://$PRIVATE_IPV4:2380
+
+
